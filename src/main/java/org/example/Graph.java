@@ -18,17 +18,30 @@ public class Graph {
         try {
             File graphFile = new File(fileName);
             Scanner scanner = new Scanner(graphFile);
+            Scanner scanner2 = new Scanner(graphFile);
 
-            while(scanner.hasNext()){
-                int src = scanner.nextInt();
-                int dest = scanner.nextInt();
-                int weight = Integer.parseInt((scanner.next() + scanner.next()).replaceAll("[^0-9]", ""));
+            int noOfLines = 0;
+            int count = 0;
+
+            while (scanner.hasNextLine()) {
+                noOfLines++;
+                scanner.nextLine();
+            }
+            scanner.close();
+            System.out.println(noOfLines);
+
+            while(scanner2.hasNext() && count <= (noOfLines / 3) * level){
+                count++;
+                int src = scanner2.nextInt();
+                int dest = scanner2.nextInt();
+                int weight = Integer.parseInt((scanner2.next() + scanner2.next()).replaceAll("[^0-9]", ""));
 
                 addNode(src);
                 addNode(dest);
                 addEdge(src, dest, weight);
             }
-            scanner.close();
+            System.out.println(adjacencyList.get(0));
+            scanner2.close();
         } catch (FileNotFoundException e){
             throw new RuntimeException(e);
         }
@@ -68,10 +81,16 @@ public class Graph {
     public int largestAdjacents(){
         int max = 0;
         for (int i = 0; i < adjacencyList.size(); i++){
-            if(max < adjacencyList.get(i).size()){
-                max = adjacencyList.get(i).size();
+            if(adjacencyList.containsKey(i)){
+                if(max < adjacencyList.get(i).size()){
+                    max = adjacencyList.get(i).size();
+                }
             }
         }
         return max;
+    }
+
+    public HashMap getAdjacecnyList(){
+        return adjacencyList;
     }
 }

@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.HashMap;
+
 public class Model {
     private Graph graph;
     private int par;
@@ -9,6 +11,7 @@ public class Model {
     private int level;
     private int maxAdjacents;
     private String fileName;
+    private HashMap adjacencyList;
 
     public Model(String fileName){
         this.fileName = fileName;
@@ -17,6 +20,7 @@ public class Model {
     public void createGraph(){
         this.graph = new Graph(fileName, level);
         maxAdjacents = graph.largestAdjacents();
+        adjacencyList = graph.getAdjacecnyList();
     }
     public void setLevel(int level) {
         this.level = level;
@@ -28,5 +32,8 @@ public class Model {
 
     public int getMaxAdjacents() {
         return this.maxAdjacents;
+    }
+    public HashMap getAdjacencyList(){
+        return adjacencyList;
     }
 }

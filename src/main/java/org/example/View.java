@@ -12,6 +12,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 public class View {
     private JFrame frame;
@@ -83,15 +85,26 @@ public class View {
 
     }
 
-    public void setLevelPanel(int level, int maxAdj) {
-        Graph g = new SingleGraph("Tutorial 1");
+    public void setLevelPanel(int level, HashMap adjacencyList) {
+        ArrayList<Node> node;
+        Graph g = new SingleGraph("Graph-" + level);
 
-        g.addNode("A");
-        g.addNode("B");
-        g.addNode("C");
-        g.addEdge("AB", "A", "B");
-        g.addEdge("BC", "B", "C");
-        g.addEdge("CA", "C", "A");
+        for (Object key : adjacencyList.keySet()){
+            g.addNode(key.toString());
+        }
+
+                //0 - 1
+               // 1- 0
+        for(Object key : adjacencyList.keySet()){
+            node = (ArrayList<Node>) adjacencyList.get(key);
+            for (int j = 0; j < node.size(); j++){
+                if(g.getEdge(node.get(j).getValue() + "-" + key.toString()) == null){
+                    g.addEdge(key + "-" + node.get(j).getValue(), key.toString(), Integer.toString(node.get(j).getValue())).setAttribute(Integer.toString(node.get(j).getWeight()));
+                    g.getEdge("0-1");
+                }
+            }
+
+        }
 
         SwingViewer viewer = new SwingViewer(g, SwingViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
         viewer.enableAutoLayout();
@@ -100,7 +113,6 @@ public class View {
         frame.add(view);
         view.setVisible(true);
         view.setBounds(5, 5, 1175, 600);
-        //graphPanelDisplay.setBackground(Color.blue);
         view.setBorder(border);
         setChoicePanel(1);
         setInfoPanel();
@@ -144,10 +156,5 @@ public class View {
         for(JButton level: levelButton){
             level.addActionListener(selectLevel);
         }
-    }
-
-    public void setUpGraphDisplay(){
-
-
     }
 }
