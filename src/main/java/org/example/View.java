@@ -3,6 +3,10 @@ package org.example;
 import org.graphstream.graph.*;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.*;
+import org.graphstream.ui.graphicGraph.GraphicSprite;
+import org.graphstream.ui.layout.springbox.implementations.SpringBox;
+import org.graphstream.ui.spriteManager.Sprite;
+import org.graphstream.ui.spriteManager.SpriteManager;
 import org.graphstream.ui.swing_viewer.SwingViewer;
 import org.graphstream.ui.swing_viewer.ViewPanel;
 import org.graphstream.ui.swing_viewer.DefaultView;
@@ -14,6 +18,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class View {
     private JFrame frame;
@@ -85,52 +90,72 @@ public class View {
 
     }
 
-    public void setLevelPanel(int level, HashMap adjacencyList) {
+    public void setGraphGamePanel(int level, HashMap adjacencyList) {
         ArrayList<Node> node;
-        Graph g = new SingleGraph("Graph-" + level);
+        Graph graph = new SingleGraph("Graph-" + level);
+        graph.setAttribute("ui.stylesheet", "edge {size: 5px; text-size: 25px;} node {size: 25px; } graph { fill-mode: image-tiled; fill-image: url('C:/Users/aidan/IdeaProjects/GolfGraph/src/main/resources/graphBackground2.png'); }");
 
         for (Object key : adjacencyList.keySet()){
-            g.addNode(key.toString());
+            graph.addNode(key.toString());
+            graph.getNode(key.toString()).setAttribute("ui.label", key);
         }
 
-                //0 - 1
-               // 1- 0
         for(Object key : adjacencyList.keySet()){
             node = (ArrayList<Node>) adjacencyList.get(key);
             for (int j = 0; j < node.size(); j++){
-                if(g.getEdge(node.get(j).getValue() + "-" + key.toString()) == null){
-                    g.addEdge(key + "-" + node.get(j).getValue(), key.toString(), Integer.toString(node.get(j).getValue())).setAttribute(Integer.toString(node.get(j).getWeight()));
-                    g.getEdge("0-1");
+                int dest = node.get(j).getValue();
+                int weight = node.get(j).getWeight();
+                String strSrc = key.toString();
+
+                if(graph.getEdge(node.get(j).getValue() + "-" + strSrc) == null){
+                    graph.addEdge(key + "-" + dest, strSrc, Integer.toString(dest)).setAttribute("ui.label", Integer.toString(weight));
                 }
             }
-
         }
 
-        SwingViewer viewer = new SwingViewer(g, SwingViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+
+        SpriteManager sman = new SpriteManager(graph);
+        Sprite s1 = sman.addSprite("s1");
+        s1.setAttribute("xy",0, 0);
+        //s1.setAttribute("layout.frozen");
+
+
+
+        SwingViewer viewer = new SwingViewer(graph, SwingViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
         viewer.enableAutoLayout();
         ViewPanel view = (ViewPanel) viewer.addDefaultView(false);
+
 
         frame.add(view);
         view.setVisible(true);
         view.setBounds(5, 5, 1175, 600);
+        view.setBackground(Color.red);
         view.setBorder(border);
-        setChoicePanel(1);
+        setChoicePanel(8);
         setInfoPanel();
 
     }
-
     public void setChoicePanel(int maxAdj) {
+        choicePanel.setLayout(new GridLayout(2, 2, 5, 5));
         choicePanel.setVisible(true);
-        choicePanel.setBounds(0, 610, 600, 190);
+        choicePanel.setBounds(0, 610, 600, 160);
         choicePanel.setBackground(Color.red);
-/*
+
         choiceButton = new JButton[maxAdj];
 
+
+
         for (int i = 0; i < maxAdj; i++){
+            System.out.println(maxAdj);
+            choiceButton[i] = new JButton();
+            choiceButton[i].setMargin(new Insets(50, 50, 50, 50));
+            choiceButton[i].setText("Level - " + (i + 1));
+            choiceButton[i].setName(Integer.toString(i+1));
             choicePanel.add(choiceButton[i]);
         }
 
- */
+
+
     }
 
     public void setInfoPanel(){

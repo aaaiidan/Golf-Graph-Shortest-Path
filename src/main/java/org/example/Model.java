@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.HashMap;
+import java.util.Random;
 
 public class Model {
     private Graph graph;
@@ -12,6 +13,8 @@ public class Model {
     private int maxAdjacents;
     private String fileName;
     private HashMap adjacencyList;
+    private int currentNode;
+    private int destNode;
 
     public Model(String fileName){
         this.fileName = fileName;
@@ -35,5 +38,27 @@ public class Model {
     }
     public HashMap getAdjacencyList(){
         return adjacencyList;
+    }
+
+    public void setRandomNodes() {
+        int start = new Random().nextInt(adjacencyList.size());
+        int end = start;
+        while (end == start){
+            end =  new Random().nextInt(adjacencyList.size());
+        }
+        System.out.println(start + " - " + end);
+        currentNode = start;
+        destNode = end;
+    }
+
+    public int getCurrentNode(){
+        return currentNode;
+    }
+    public int getDestNode(){
+        return destNode;
+    }
+
+    public void setCurrentNode(){
+
     }
 }

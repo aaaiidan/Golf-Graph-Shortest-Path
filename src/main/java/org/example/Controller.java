@@ -23,7 +23,10 @@ public class Controller {
                 model.createGraph();
                 view.removeStartPanel();
                 view.addGamePanels();
-                view.setLevelPanel(model.getLevel(), model.getAdjacencyList());
+                view.setGraphGamePanel(model.getLevel(), model.getAdjacencyList());
+                model.setRandomNodes();
+                System.out.println(model.getCurrentNode());
+                System.out.println(model.getDestNode());
             }
         }
     }
