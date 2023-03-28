@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f7b48633-5c88-4bcb-b087-22dac57322dc" name="Changes" comment="Graph displaying for each level">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="f7b48633-5c88-4bcb-b087-22dac57322dc" name="Changes" comment="Commit for styling update">
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Controller.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Model.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/View.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +94,7 @@
       <workItem from="1679494714445" duration="8635000" />
       <workItem from="1679591907998" duration="95000" />
       <workItem from="1679937448675" duration="10045000" />
-      <workItem from="1680006473961" duration="4575000" />
+      <workItem from="1680006473961" duration="4990000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1679495506792</created>
@@ -112,7 +110,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679502993096</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Commit for styling update">
+      <created>1680011558330</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1680011558330</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -132,7 +137,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial commit" />
     <MESSAGE value="Graph displaying for each level" />
-    <option name="LAST_COMMIT_MESSAGE" value="Graph displaying for each level" />
+    <MESSAGE value="Commit for styling update" />
+    <option name="LAST_COMMIT_MESSAGE" value="Commit for styling update" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

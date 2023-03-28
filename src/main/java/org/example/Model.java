@@ -58,7 +58,9 @@ public class Model {
         return destNode;
     }
 
-    public void setCurrentNode(){
-
+    public int[] setCurrentAdjacents(){
+        int[] list = graph.getAdjacents(currentNode);
+        System.out.println(list);
+        return graph.getAdjacents(currentNode);
     }
 }

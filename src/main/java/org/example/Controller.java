@@ -27,6 +27,7 @@ public class Controller {
                 model.setRandomNodes();
                 System.out.println(model.getCurrentNode());
                 System.out.println(model.getDestNode());
+                model.setCurrentAdjacents();
             }
         }
     }
