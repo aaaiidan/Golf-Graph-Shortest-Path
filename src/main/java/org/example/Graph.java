@@ -65,12 +65,17 @@ public class Graph {
     }
 
     public int shortestPath(int start, int end){
-        DijkstrasAlgorithm algo = new DijkstrasAlgorithm(getNodes().size(), adjacencyList);
-        algo.runAlgorithm(start, end);
+        int max = 0;
+        for (int i = 0; i < adjacencyList.keySet().size(); i++){
+            max = Math.max(max, getNodes().get(i));
+        }
+        DijkstrasAlgorithm algo = new DijkstrasAlgorithm(max + 1, adjacencyList);
+        algo.runAlgorithm(start);
         return algo.getDistance(end);
     }
 
     public int[] getAdjacents(int node) {
+
         int[] adjacents = new int[adjacencyList.get(node).size()];
         for (int i = 0; i < adjacents.length; i++) {
             adjacents[i] =  adjacencyList.get(node).get(i).getValue();

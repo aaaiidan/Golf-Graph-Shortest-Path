@@ -1,5 +1,6 @@
 package org.example;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -15,9 +16,12 @@ public class Model {
     private HashMap adjacencyList;
     private int currentNode;
     private int destNode;
+    private int currentWeight;
 
     public Model(String fileName){
         this.fileName = fileName;
+        this.score = 0;
+        this.hole = 1;
     }
 
     public void createGraph(){
@@ -39,13 +43,42 @@ public class Model {
     public HashMap getAdjacencyList(){
         return adjacencyList;
     }
+    public void setPar(){
+        this.par = graph.shortestPath(currentNode, destNode);
+    }
+    public int getPar(){
+        return this.par;
+    }
 
-    public void setRandomNodes() {
-        int start = new Random().nextInt(adjacencyList.size());
-        int end = start;
-        while (end == start){
-            end =  new Random().nextInt(adjacencyList.size());
+    public void setWeight(int chosenNode){
+        ArrayList<Node> currentAdjacentArrayList = (ArrayList<Node>) adjacencyList.get(currentNode);
+        for(int i = 0; i < currentAdjacentArrayList.size(); i++){
+            if(currentAdjacentArrayList.get(i).getValue() == chosenNode){
+                this.currentWeight = currentAdjacentArrayList.get(i).getWeight();
+                i = currentAdjacentArrayList.size();
+            }
         }
+    }
+
+    public int getWeight(){
+        return this.currentWeight;
+    }
+    public void setRandomNodes() {
+        int start = -1;
+        int max = 0;
+        for (Object key: adjacencyList.keySet()){
+            max = Math.max(max, Integer.parseInt(key.toString()));
+        }
+
+        while(!adjacencyList.containsKey(start)){
+            start = new Random().nextInt(max);
+        }
+
+        int end = start;
+        while (end == start || !adjacencyList.containsKey(end)){
+            end =  new Random().nextInt(max);
+        }
+
         System.out.println(start + " - " + end);
         currentNode = start;
         destNode = end;
@@ -60,7 +93,39 @@ public class Model {
 
     public int[] setCurrentAdjacents(){
         int[] list = graph.getAdjacents(currentNode);
-        System.out.println(list);
+        for(int i = 0; i < list.length; i++){
+            System.out.println(list[i]);
+        }
         return graph.getAdjacents(currentNode);
     }
+
+    public void setCurrentNode(int currentNode) {
+        this.currentNode = currentNode;
+    }
+
+    public void setScore(){
+        this.score += currentWeight;
+    }
+
+    public int getScore(){
+        return this.score;
+    }
+
+    public void setTotalScore(){
+        this.totalScore += (this.score - this.par);
+        this.score = 0;
+    }
+
+    public int getTotalScore(){
+        return this.totalScore;
+    }
+
+    public void setHole(){
+        this.hole++;
+    }
+
+    public int getHole(){
+        return this.hole;
+    }
+
 }
