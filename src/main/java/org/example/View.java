@@ -87,7 +87,7 @@ public class View {
     public void setGraphGamePanel(int level, HashMap adjacencyList, int[] currentAdjacents, int maxAdj) {
         ArrayList<Node> node;
         Graph graph = new SingleGraph("Graph-" + level);
-        graph.setAttribute("ui.stylesheet", "edge {size: 5px; text-size: 25px;} node {size: 25px; text-size: 15px; text-color: white; } graph { fill-mode: image-tiled; fill-image: url('C:/Users/aidan/IdeaProjects/GolfGraph/src/main/resources/graphBackground2.png'); }");
+        graph.setAttribute("ui.stylesheet", stylesheet);
 
         for (Object key : adjacencyList.keySet()){
             graph.addNode(key.toString());
@@ -106,7 +106,6 @@ public class View {
                 }
             }
         }
-
 
         SwingViewer viewer = new SwingViewer(graph, SwingViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
         viewer.enableAutoLayout();
