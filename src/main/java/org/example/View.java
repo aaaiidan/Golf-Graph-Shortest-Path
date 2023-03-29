@@ -93,7 +93,7 @@ public class View {
     public void setGraphGamePanel(int level, HashMap adjacencyList) {
         ArrayList<Node> node;
         Graph graph = new SingleGraph("Graph-" + level);
-        graph.setAttribute("ui.stylesheet", "edge {size: 5px; text-size: 25px;} node {size: 25px; } graph { fill-mode: image-tiled; fill-image: url('C:/Users/aidan/IdeaProjects/GolfGraph/src/main/resources/graphBackground2.png'); }");
+        graph.setAttribute("ui.stylesheet", stylesheet);
 
         for (Object key : adjacencyList.keySet()){
             graph.addNode(key.toString());
@@ -112,14 +112,6 @@ public class View {
                 }
             }
         }
-
-
-        SpriteManager sman = new SpriteManager(graph);
-        Sprite s1 = sman.addSprite("s1");
-        s1.setAttribute("xy",0, 0);
-        //s1.setAttribute("layout.frozen");
-
-
 
         SwingViewer viewer = new SwingViewer(graph, SwingViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
         viewer.enableAutoLayout();
@@ -182,4 +174,14 @@ public class View {
             level.addActionListener(selectLevel);
         }
     }
+
+
+    private String stylesheet = ""
+            //+ "edge {size: 3px; text-size: 25px; text-color: black; edge-color} "
+            + "edge {text-size: px; fill-color: brown; shadow-mode: plain; shadow-width: 3px; shadow-color: #FC0; shadow-offset: 0px;}"
+            + "node { size: 24px; text-size: 18px; fill-color: #20BF55, #01BAEF; stroke-mode: plain; stroke-color: #999; fill-mode: gradient-horizontal; shadow-mode: plain; shadow-width: 0px; shadow-color:#999; shadow-offset: 3px, -3px;}"
+            //+ "node {size: 20px; fill-color: #FBD72B, #F9484A; fill-mode: gradient-horizontal; }}"
+            //+ "node.current { size: 20px; fill-color: white, #8B939A; fill-mode: gradient-horizontal; }"
+            //+ "node.available { size: 25px; fill-color: #20BF55, #01BAEF; stroke-mode: plain; stroke-color: #999; fill-mode: gradient-horizontal; shadow-mode: plain; shadow-width: 0px; shadow-color:#999; shadow-offset: 3px, -3px;}"
+            + "graph { fill-mode: image-tiled; fill-image: url('src/main/resources/background3.png'); }";
 }
