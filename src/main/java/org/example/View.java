@@ -1,24 +1,19 @@
 package org.example;
 
-import org.graphstream.graph.*;
+import java.util.Timer;
+import java.util.TimerTask;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.*;
-import org.graphstream.ui.graphicGraph.GraphicSprite;
-import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 import org.graphstream.ui.spriteManager.Sprite;
 import org.graphstream.ui.spriteManager.SpriteManager;
 import org.graphstream.ui.swing_viewer.SwingViewer;
 import org.graphstream.ui.swing_viewer.ViewPanel;
-import org.graphstream.ui.swing_viewer.DefaultView;
-import org.graphstream.ui.view.Viewer;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class View {
     private JFrame frame;
@@ -48,7 +43,6 @@ public class View {
             levelButton[i].setText("Level - " + (i + 1));
             levelButton[i].setName(Integer.toString(i+1));
         }
-
 
         setFrame();
         hideAllPanels();
@@ -90,7 +84,7 @@ public class View {
 
     }
 
-    public void setGraphGamePanel(int level, HashMap adjacencyList) {
+    public void setGraphGamePanel(int level, HashMap adjacencyList, int[] currentAdjacents, int maxAdj) {
         ArrayList<Node> node;
         Graph graph = new SingleGraph("Graph-" + level);
         graph.setAttribute("ui.stylesheet", stylesheet);
@@ -121,13 +115,12 @@ public class View {
         frame.add(view);
         view.setVisible(true);
         view.setBounds(5, 5, 1175, 600);
-        view.setBackground(Color.red);
         view.setBorder(border);
-        setChoicePanel(8);
+        setChoicePanel(maxAdj, currentAdjacents);
         setInfoPanel();
 
     }
-    public void setChoicePanel(int maxAdj) {
+    public void setChoicePanel(int maxAdj,  int[] currentAdjacent) {
         choicePanel.setLayout(new GridLayout(2, 2, 5, 5));
         choicePanel.setVisible(true);
         choicePanel.setBounds(0, 610, 600, 160);
@@ -135,15 +128,21 @@ public class View {
 
         choiceButton = new JButton[maxAdj];
 
-
-
         for (int i = 0; i < maxAdj; i++){
-            System.out.println(maxAdj);
             choiceButton[i] = new JButton();
             choiceButton[i].setMargin(new Insets(50, 50, 50, 50));
-            choiceButton[i].setText("Level - " + (i + 1));
-            choiceButton[i].setName(Integer.toString(i+1));
+            choiceButton[i].setBorder(null);
             choicePanel.add(choiceButton[i]);
+        }
+
+        for (int i = 0; i < maxAdj; i++){
+            if(i < currentAdjacent.length){
+                choiceButton[i].setText(String.valueOf(currentAdjacent[i]));
+                choiceButton[i].setName(String.valueOf(currentAdjacent[i]));
+            } else {
+                choiceButton[i].setText("X");
+                choiceButton[i].setEnabled(false);
+            }
         }
 
 
@@ -169,19 +168,28 @@ public class View {
 
     }
 
-    public void addActionListeners(ActionListener selectLevel){
-        for(JButton level: levelButton){
+    public void addLevelButtonActionListeners(ActionListener selectLevel){
+        for(JButton level: levelButton) {
             level.addActionListener(selectLevel);
         }
     }
 
+    public void addChoiceButtonActionListeners(ActionListener selectNode){
+        for(JButton button: choiceButton){
+            button.addActionListener(selectNode);
+        }
+    }
 
-    private String stylesheet = ""
-            //+ "edge {size: 3px; text-size: 25px; text-color: black; edge-color} "
-            + "edge {text-size: px; fill-color: brown; shadow-mode: plain; shadow-width: 3px; shadow-color: #FC0; shadow-offset: 0px;}"
-            + "node { size: 24px; text-size: 18px; fill-color: #20BF55, #01BAEF; stroke-mode: plain; stroke-color: #999; fill-mode: gradient-horizontal; shadow-mode: plain; shadow-width: 0px; shadow-color:#999; shadow-offset: 3px, -3px;}"
-            //+ "node {size: 20px; fill-color: #FBD72B, #F9484A; fill-mode: gradient-horizontal; }}"
-            //+ "node.current { size: 20px; fill-color: white, #8B939A; fill-mode: gradient-horizontal; }"
-            //+ "node.available { size: 25px; fill-color: #20BF55, #01BAEF; stroke-mode: plain; stroke-color: #999; fill-mode: gradient-horizontal; shadow-mode: plain; shadow-width: 0px; shadow-color:#999; shadow-offset: 3px, -3px;}"
-            + "graph { fill-mode: image-tiled; fill-image: url('src/main/resources/background3.png'); }";
+    public void UpdateButtons(int maxAdj, int[] currentAdjacent) {
+        for (int i = 0; i < maxAdj; i++){
+            if(i < currentAdjacent.length){
+                choiceButton[i].setText(String.valueOf(currentAdjacent[i]));
+                choiceButton[i].setName(String.valueOf(currentAdjacent[i]));
+                choiceButton[i].setEnabled(true);
+            } else {
+                choiceButton[i].setText("X");
+                choiceButton[i].setEnabled(false);
+            }
+        }
+    }
 }

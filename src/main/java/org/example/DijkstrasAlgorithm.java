@@ -33,7 +33,7 @@ public class DijkstrasAlgorithm {
 
     }
 
-    public void runAlgorithm (int start, int end){
+    public void runAlgorithm (int start){
 
         for (int i = 0; i < noOfN; i++){
             distance[i] = Integer.MAX_VALUE;
