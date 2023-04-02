@@ -22,12 +22,13 @@ public class Controller {
                 model.setLevel(buttonID);
                 model.createGraph();
                 view.removeStartPanel();
-                view.addGamePanels();
                 model.setRandomNodes();
-                model.setCurrentAdjacents();
-                view.setGraphGamePanel(model.getLevel(), model.getAdjacencyList(), model.setCurrentAdjacents(), model.getMaxAdjacents());
+                model.setCurrentAdjacent();
+                view.setGraphGamePanel(model.getLevel(), model.getAdjacencyList(), model.getCurrentAdjacent(), model.getMaxAdjacents());
                 model.setPar();
+                model.setVisited(model.getCurrentNode());
                 view.addChoiceButtonActionListeners(new selectNode());
+                view.updateNodes(model.getCurrentNode(), model.getCurrentAdjacent(), model.getVisited());
                 System.out.println("Par - " + model.getPar());
             }
         }
@@ -40,13 +41,19 @@ public class Controller {
             model.setWeight(chosenNode);
             model.setScore();
             model.setCurrentNode(chosenNode);
+            model.setVisited(chosenNode);
+            model.setCurrentAdjacent();
+            view.updateNodes(model.getCurrentNode(), model.getCurrentAdjacent(), model.getVisited());
 
             if(chosenNode == model.getDestNode() && model.getHole() <= 3){
                 model.setTotalScore();
                 model.setRandomNodes();
-                model.setCurrentAdjacents();
+                model.setCurrentAdjacent();
                 model.setPar();
                 model.setHole();
+                model.clearVisited();
+                view.resetNodes();
+                view.updateNodes(model.getCurrentNode(), model.getCurrentAdjacent(), model.getVisited());
                 System.out.println("NEW GAME ----------------------------");
                 System.out.println("Total Score -" + model.getTotalScore());
                 System.out.println("Start Node -" + model.getCurrentNode());
@@ -60,7 +67,7 @@ public class Controller {
                 System.out.println("WINNER");
                 System.out.println("Total Score -" + model.getTotalScore());
             } else{
-                view.UpdateButtons(model.getMaxAdjacents(),model.setCurrentAdjacents());
+                view.UpdateButtons(model.getMaxAdjacents(),model.getCurrentAdjacent());
                 System.out.println("chosen node - " + model.getCurrentNode());
                 System.out.println("Weight - " + model.getWeight());
                 System.out.println("Score - " + model.getScore());

@@ -17,11 +17,14 @@ public class Model {
     private int currentNode;
     private int destNode;
     private int currentWeight;
+    private int[] currentAdjacent;
+    private ArrayList<Integer> visited;
 
     public Model(String fileName){
         this.fileName = fileName;
         this.score = 0;
         this.hole = 1;
+        this.visited = new ArrayList<>();
     }
 
     public void createGraph(){
@@ -91,12 +94,12 @@ public class Model {
         return destNode;
     }
 
-    public int[] setCurrentAdjacents(){
-        int[] list = graph.getAdjacents(currentNode);
-        for(int i = 0; i < list.length; i++){
-            System.out.println(list[i]);
-        }
-        return graph.getAdjacents(currentNode);
+    public void setCurrentAdjacent(){
+        this.currentAdjacent = graph.getAdjacents(currentNode);
+    }
+
+    public int[] getCurrentAdjacent(){
+        return currentAdjacent;
     }
 
     public void setCurrentNode(int currentNode) {
@@ -126,6 +129,18 @@ public class Model {
 
     public int getHole(){
         return this.hole;
+    }
+
+    public void setVisited(int node){
+        this.visited.add(node);
+    }
+
+    public ArrayList<Integer> getVisited(){
+        return this.visited;
+    }
+
+    public void clearVisited(){
+        this.visited.clear();
     }
 
 }

@@ -1,19 +1,16 @@
 package org.example;
 
-import java.util.Timer;
-import java.util.TimerTask;
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.implementations.*;
-import org.graphstream.ui.spriteManager.Sprite;
-import org.graphstream.ui.spriteManager.SpriteManager;
+import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.swing_viewer.SwingViewer;
 import org.graphstream.ui.swing_viewer.ViewPanel;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class View {
     private JFrame frame;
@@ -26,9 +23,10 @@ public class View {
     private JButton[] levelButton;
     private JButton[] choiceButton;
     private Border border;
-
+    private Graph graph;
 
     public View(){
+
         frame = new JFrame("Golf Graph");
         startPanel = new JPanel();
         graphPanelDisplay = new JPanel();
@@ -37,19 +35,9 @@ public class View {
         title = new JLabel("Golf Graph!", SwingConstants.CENTER);
         levelButton = new JButton[3];
         border = BorderFactory.createLineBorder(Color.black);
+        graph = new SingleGraph("Graph");
+        graph.setAttribute("ui.stylesheet", stylesheet);
 
-        for (int i = 0; i < levelButton.length; i++){
-            levelButton[i] = new JButton();
-            levelButton[i].setText("Level - " + (i + 1));
-            levelButton[i].setName(Integer.toString(i+1));
-        }
-
-        setFrame();
-        hideAllPanels();
-        setStartPanel();
-    }
-
-    public void setFrame(){
         frame.setLayout(null);
         frame.setSize(1200, 800);
         frame.setResizable(false);
@@ -57,21 +45,20 @@ public class View {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         frame.add(startPanel);
-    }
+        frame.add(graphPanelDisplay);
+        frame.add(infoPanel);
+        frame.add(choicePanel);
 
-    public void hideAllPanels(){
-        startPanel.setVisible(false);
-        graphPanelDisplay.setVisible(false);
-        choicePanel.setVisible(false);
-        infoPanel.setVisible(false);
-    }
+        for (int i = 0; i < levelButton.length; i++){
+            levelButton[i] = new JButton();
+            levelButton[i].setText("Level - " + (i + 1));
+            levelButton[i].setName(Integer.toString(i+1));
+        }
 
-    public void setStartPanel(){
         startPanel.setVisible(true);
         startPanel.add(title);
         startPanel.setLayout(null);
         startPanel.setBounds(0, 0, 1200, 800);
-
 
         int yAxis = 250;
         for (int i = 0; i < levelButton.length; i++){
@@ -81,13 +68,11 @@ public class View {
         }
 
         title.setBounds(550, 0, 100, 100);
-
     }
 
     public void setGraphGamePanel(int level, HashMap adjacencyList, int[] currentAdjacents, int maxAdj) {
         ArrayList<Node> node;
-        Graph graph = new SingleGraph("Graph-" + level);
-        graph.setAttribute("ui.stylesheet", stylesheet);
+
 
         for (Object key : adjacencyList.keySet()){
             graph.addNode(key.toString());
@@ -145,8 +130,6 @@ public class View {
             }
         }
 
-
-
     }
 
     public void setInfoPanel(){
@@ -159,13 +142,6 @@ public class View {
     public void removeStartPanel(){
         startPanel.setVisible(false);
         frame.remove(startPanel);
-    }
-
-    public void addGamePanels(){
-        frame.add(graphPanelDisplay);
-        frame.add(infoPanel);
-        frame.add(choicePanel);
-
     }
 
     public void addLevelButtonActionListeners(ActionListener selectLevel){
@@ -192,4 +168,59 @@ public class View {
             }
         }
     }
+
+    public void updateNodes(int curNode, int[] adjacentNodes, ArrayList<Integer> visited){
+
+        //reset all nodes that are not adjacent to red
+        for(org.graphstream.graph.Node node : graph) {
+            for (int adjacent : adjacentNodes){
+                if (Integer.parseInt(node.getId()) != adjacent){
+                    node.removeAttribute("ui.class");
+                }
+            }
+        }
+
+        //change all adjacent nodes to blue
+        for(int node : adjacentNodes){
+            graph.getNode(Integer.toString(node)).setAttribute("ui.class", "available");
+        }
+
+        //change all visited nodes to gold
+        for(int i = 0; i < visited.size(); i++){
+            graph.getNode(Integer.toString(visited.get(i))).removeAttribute("ui.class");
+            graph.getNode(Integer.toString(visited.get(i))).setAttribute("ui.class", "visited");
+            if (visited.size() > 1 && i+1 < visited.size()){
+                if(graph.getEdge(visited.get(i) + "-" + visited.get(i+1)) != null){
+                    graph.getEdge(visited.get(i) + "-" + visited.get(i+1)).setAttribute("ui.class", "visited");
+                } else{
+                    graph.getEdge(visited.get(i+1) + "-" + visited.get(i)).setAttribute("ui.class", "visited");
+                }
+            }
+        }
+
+        //change current node to white
+        graph.getNode(Integer.toString(curNode)).removeAttribute("ui.class");
+        graph.getNode(Integer.toString(curNode)).setAttribute("ui.class", "current");
+
+    }
+
+    public void resetNodes(){
+        for(org.graphstream.graph.Node node : graph) {
+            node.removeAttribute("ui.class");
+        }
+        graph.edges().forEach(edge -> {
+            edge.removeAttribute("ui.class");
+        });
+    }
+
+    private String stylesheet = ""
+            //+ "edge {size: 3px; text-size: 25px; text-color: black; edge-color} "
+            + "edge { size: 4px; text-size: 25px; text-color: #3f301d; text-style: bold; fill-color: #a8ba9a; }"
+            + "edge.visited { fill-color: #FC0; fill-mode: plain; shadow-mode: plain; shadow-width: 3px; shadow-color: #4c3d00; shadow-offset: 0px; }"
+            + "node { size: 25px; text-color: white; text-size: 20px; text-alignment: center; fill-color: red; fill-mode: plain; stroke-mode: plain; stroke-color: black; }" //Unavailable Node
+            + "node.current { text-color: black; fill-color: white;} " // shadow-mode: plain; shadow-width: 3px; shadow-color: #FC0; shadow-offset: 0px;
+            + "node.available { fill-color: blue;}"
+            + "node.visited { fill-color: #FC0; }"
+            + "graph { fill-mode: image-tiled; fill-image: url('src/main/resources/background3.png'); }";
+
 }
