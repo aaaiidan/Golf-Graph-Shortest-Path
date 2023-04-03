@@ -7,11 +7,14 @@ import java.awt.event.ActionListener;
 public class Controller {
     private Model model;
     private View view;
+    private View standardView;
 
     public Controller(Model model, View view) {
         this.model  = model;
         this.view = view;
+        this.standardView = view;
         this.view.addLevelButtonActionListeners(new selectLevel());
+        this.view.addHomeButtonListeners(new home());
     }
 
     class selectLevel implements ActionListener{
@@ -28,7 +31,7 @@ public class Controller {
 
                 view.openLevelPanel();
                 view.createVisualGraph(model.getAdjacencyList());
-                view.choicePanelButtonSetup(model.getMaxAdjacents(), model.getCurrentAdjacent());
+                view.choicePanelButtonSetup(model.getMaxAdjacent(), model.getCurrentAdjacent());
                 view.updateNodes(model.getCurrentNode(), model.getDestNode(), model.getCurrentAdjacent(), model.getVisited());
                 view.updateLabels(model.getCurrentNode(), model.getDestNode(), model.getScore(), model.getTotalScore(), model.getPar(), model.getHole());
                 view.addChoiceButtonActionListeners(new selectNode());
@@ -54,29 +57,30 @@ public class Controller {
                 model.setPar();
                 model.setHole();
                 model.clearVisited();
+
                 view.resetNodes();
                 view.updateLabels(model.getCurrentNode(), model.getDestNode(), model.getScore(), model.getTotalScore(), model.getPar(), model.getHole());
                 view.updateNodes(model.getCurrentNode(), model.getDestNode(), model.getCurrentAdjacent(), model.getVisited());
-                System.out.println("NEW GAME ----------------------------");
-                System.out.println("Total Score -" + model.getTotalScore());
-                System.out.println("Start Node -" + model.getCurrentNode());
-                System.out.println("End Node -" + model.getDestNode());
-                System.out.println("Par - " + model.getPar());
-
             }
-
-            if (model.getHole() > 3) {
+            if (model.getHole() > 1) {
                 model.setTotalScore();
-                System.out.println("WINNER");
-                System.out.println("Total Score -" + model.getTotalScore());
+
+                view.leaveLevelPanel();
+                view.displayWinner(model.getTotalScore());
             } else{
-                view.UpdateButtons(model.getMaxAdjacents(),model.getCurrentAdjacent());
+                view.UpdateButtons(model.getMaxAdjacent(),model.getCurrentAdjacent());
                 view.updateNodes(model.getCurrentNode(), model.getDestNode(), model.getCurrentAdjacent(), model.getVisited());
                 view.updateLabels(model.getCurrentNode(), model.getDestNode(), model.getScore(), model.getTotalScore(), model.getPar(), model.getHole());
 
             }
 
         }
+    }
 
+    class home implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            view.returnHome();
         }
+    }
 }

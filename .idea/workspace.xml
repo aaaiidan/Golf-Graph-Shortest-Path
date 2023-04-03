@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f7b48633-5c88-4bcb-b087-22dac57322dc" name="Changes" comment="edges and nodes reset/update correctly (gui)">
+    <list default="true" id="f7b48633-5c88-4bcb-b087-22dac57322dc" name="Changes" comment="Refactored code">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Model.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/View.java" afterDir="false" />
     </list>
@@ -101,7 +101,7 @@
       <workItem from="1679937448675" duration="10045000" />
       <workItem from="1680006473961" duration="10140000" />
       <workItem from="1680017119328" duration="22854000" />
-      <workItem from="1680455839579" duration="9585000" />
+      <workItem from="1680455839579" duration="15218000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1679495506792</created>
@@ -145,7 +145,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680454283296</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Refactored code">
+      <created>1680536667648</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1680536667648</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -169,7 +176,8 @@
     <MESSAGE value="images" />
     <MESSAGE value="Working holes, total score, score, buttons, new game etc etc" />
     <MESSAGE value="edges and nodes reset/update correctly (gui)" />
-    <option name="LAST_COMMIT_MESSAGE" value="edges and nodes reset/update correctly (gui)" />
+    <MESSAGE value="Refactored code" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactored code" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -180,7 +188,7 @@
         </breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/example/Model.java</url>
-          <line>56</line>
+          <line>57</line>
           <option name="timeStamp" value="11" />
         </line-breakpoint>
       </breakpoints>

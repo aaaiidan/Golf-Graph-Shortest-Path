@@ -16,7 +16,7 @@ public class Main {
 
         Model model = new Model("src/main/java/org/example/log2023-01-14 18=13.txt");
         View view = new View();
-        Controller controller = new Controller(model, view);
+        new Controller(model, view);
 
     }
 }

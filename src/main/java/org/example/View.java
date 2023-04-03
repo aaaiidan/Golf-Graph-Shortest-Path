@@ -35,26 +35,16 @@ public class View {
     private JLabel totalScoreLabel;
     private JLabel parLabel;
     private JLabel holeLabel;
+    private JLabel winnerLabel;
+    private JLabel totalScoreWinnerLabel;
     private JButton[] levelButton;
     private JButton[] choiceButton;
+    private JButton homeButton;
     private Border border;
     private Font infoFont;
     private Color infoColour;
 
     public View(){
-        //setting up visual graph
-        graph = new SingleGraph("Graph");
-        graph.setAttribute("ui.stylesheet", stylesheet);
-        spriteManager = new SpriteManager(graph);
-        flag = spriteManager.addSprite("flag");
-        viewer = new SwingViewer(graph, SwingViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-        viewer.enableAutoLayout();
-        view = (ViewPanel) viewer.addDefaultView(false);
-        view.setVisible(false);
-        view.setBounds(5, 5, 1175, 600);
-        view.setBorder(border);
-        view.setLayout(null);
-
         //JFrame
         frame = new JFrame("Golf Graph");
 
@@ -63,6 +53,7 @@ public class View {
         graphPanelDisplay = new JPanel();
         choicePanel = new JPanel();
         infoPanel = new JPanel();
+        winnerPanel = new JPanel();
 
         //All JLabels
         title = new JLabel("Golf Graph!");
@@ -72,13 +63,17 @@ public class View {
         totalScoreLabel = new JLabel("Total Score: 0");
         parLabel = new JLabel();
         holeLabel = new JLabel("HOLE 1");
+        winnerLabel = new JLabel("WINNER!!!");
+        totalScoreWinnerLabel = new JLabel();
 
+        //buttons
         levelButton = new JButton[3];
+        homeButton = new JButton("Home");
 
+        //font and borders
         border = BorderFactory.createLineBorder(Color.black);
         infoFont = new Font("Futura", Font.PLAIN , 25);
         infoColour = Color.white;
-
 
         //setting up frame
         frame.setLayout(null);
@@ -91,12 +86,14 @@ public class View {
         frame.add(graphPanelDisplay);
         frame.add(infoPanel);
         frame.add(choicePanel);
-        frame.add(view);
+       // frame.add(view);
+        frame.add(winnerPanel);
 
         //setting up startPanel
         startPanel.setVisible(true);
         startPanel.add(title);
         startPanel.setLayout(null);
+        startPanel.setBackground(new Color(135,206, 235));
         startPanel.setBounds(0, 0, 1200, 800);
 
         for (int i = 0; i < levelButton.length; i++){
@@ -105,12 +102,14 @@ public class View {
             levelButton[i].setName(Integer.toString(i+1));
         }
         int yAxis = 250;
-        for (JButton jButton : levelButton) {
-            startPanel.add(jButton);
-            jButton.setBounds(475, yAxis, 250, 100);
+        for (JButton levelButton : levelButton) {
+            startPanel.add(levelButton);
+            levelButton.setBounds(475, yAxis, 250, 100);
+            levelButton.setFont(new Font("Futura", Font.BOLD , 50));
             yAxis += 150;
         }
-        title.setBounds(550, 0, 100, 100);
+        title.setBounds(460, 0, 500, 100);
+        title.setFont(new Font("Futura", Font.BOLD , 50));
 
         //setting up choicePanel
         choicePanel.setLayout(new GridLayout(2, 2, 5, 5));
@@ -151,10 +150,44 @@ public class View {
         parLabel.setForeground(infoColour);
         holeLabel.setForeground(infoColour);
 
+        //setting up winnerPanel
+        winnerPanel.setLayout(null);
+        winnerPanel.setVisible(false);
+        winnerPanel.setBounds(0, 0, 1200, 800);
+        winnerPanel.setBackground(new Color(135,206, 235));
+        winnerPanel.add(homeButton);
+        winnerPanel.add(winnerLabel);
+        winnerPanel.add(totalScoreWinnerLabel);
+
+        winnerLabel.setFont(new Font("Futura", Font.BOLD , 100));
+        winnerLabel.setForeground(new Color(241, 134, 129));
+        winnerLabel.setBounds(360, 100, 500, 100);
+
+        totalScoreWinnerLabel.setFont(new Font("Futura", Font.BOLD , 50));
+        totalScoreWinnerLabel.setForeground(new Color(241, 134, 129));
+        totalScoreWinnerLabel.setBounds(430, 250, 500, 100);
+
+        homeButton.setBounds(350, 500, 500, 100);
+        homeButton.setFont(new Font("Futura", Font.BOLD , 50));
     }
 
     public void createVisualGraph(HashMap adjacencyList) {
         ArrayList<Node> node;
+
+        //setting up visual graph
+        graph = new SingleGraph("Graph");
+        graph.setAttribute("ui.stylesheet", stylesheet);
+        spriteManager = new SpriteManager(graph);
+        flag = spriteManager.addSprite("flag");
+        viewer = new SwingViewer(graph, SwingViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+        viewer.enableAutoLayout();
+        view = (ViewPanel) viewer.addDefaultView(false);
+        view.setVisible(true);
+        view.setBounds(5, 5, 1175, 600);
+        view.setBorder(border);
+        view.setLayout(null);
+
+        frame.add(view);
 
         for (Object key : adjacencyList.keySet()){
             graph.addNode(key.toString());
@@ -196,22 +229,9 @@ public class View {
 
     public void openLevelPanel(){
         startPanel.setVisible(false);
-        frame.remove(startPanel);
-        view.setVisible(true);
+        //view.setVisible(true);
         choicePanel.setVisible(true);
         infoPanel.setVisible(true);
-    }
-
-    public void addLevelButtonActionListeners(ActionListener selectLevel){
-        for(JButton level: levelButton) {
-            level.addActionListener(selectLevel);
-        }
-    }
-
-    public void addChoiceButtonActionListeners(ActionListener selectNode){
-        for(JButton button: choiceButton){
-            button.addActionListener(selectNode);
-        }
     }
 
     public void UpdateButtons(int maxAdj, int[] currentAdjacent) {
@@ -288,8 +308,38 @@ public class View {
 
     }
 
+    public void leaveLevelPanel(){
+        view.setVisible(false);
+        choicePanel.setVisible(false);
+        infoPanel.setVisible(false);
+    }
+    public void displayWinner(int totalScore){
+        winnerPanel.setVisible(true);
+        totalScoreWinnerLabel.setText("Total Score: " + totalScore);
+    }
+
+    public void returnHome(){
+        winnerPanel.setVisible(false);
+        startPanel.setVisible(true);
+    }
+
+    public void addLevelButtonActionListeners(ActionListener selectLevel){
+        for(JButton level: levelButton) {
+            level.addActionListener(selectLevel);
+        }
+    }
+
+    public void addChoiceButtonActionListeners(ActionListener selectNode){
+        for(JButton button: choiceButton){
+            button.addActionListener(selectNode);
+        }
+    }
+    public void addHomeButtonListeners(ActionListener home){
+        homeButton.addActionListener(home);
+
+    }
+
     private String stylesheet = ""
-            //+ "edge {size: 3px; text-size: 25px; text-color: black; edge-color} "
             + "edge { size: 4px; text-size: 25px; text-color: #3f301d; text-style: bold; fill-color: #a8ba9a; }"
             + "edge.visited { fill-color: #FC0; fill-mode: plain; shadow-mode: plain; shadow-width: 3px; shadow-color: #4c3d00; shadow-offset: 0px; }"
             + "node { size: 25px; text-color: white; text-size: 20px; text-alignment: center; fill-color: red; fill-mode: plain; stroke-mode: plain; stroke-color: black; }" //Unavailable Node

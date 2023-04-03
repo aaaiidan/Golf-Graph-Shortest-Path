@@ -11,7 +11,7 @@ public class Model {
     private int hole;
     private int totalScore;
     private int level;
-    private int maxAdjacents;
+    private int maxAdjacent;
     private String fileName;
     private HashMap adjacencyList;
     private int currentNode;
@@ -22,15 +22,16 @@ public class Model {
 
     public Model(String fileName){
         this.fileName = fileName;
-        this.score = 0;
-        this.hole = 1;
         this.visited = new ArrayList<>();
     }
 
     public void createGraph(){
         this.graph = new Graph(fileName, level);
-        maxAdjacents = graph.largestAdjacents();
+        maxAdjacent = graph.largestAdjacents();
         adjacencyList = graph.getAdjacecnyList();
+        this.score = 0;
+        this.hole = 1;
+        this.totalScore = 0;
     }
     public void setLevel(int level) {
         this.level = level;
@@ -40,8 +41,8 @@ public class Model {
         return this.level;
     }
 
-    public int getMaxAdjacents() {
-        return this.maxAdjacents;
+    public int getMaxAdjacent() {
+        return this.maxAdjacent;
     }
     public HashMap getAdjacencyList(){
         return adjacencyList;
