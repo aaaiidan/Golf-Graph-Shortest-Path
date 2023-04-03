@@ -21,14 +21,17 @@ public class Controller {
                 int buttonID = Integer.parseInt(((JButton) e.getSource()).getName());
                 model.setLevel(buttonID);
                 model.createGraph();
-                view.removeStartPanel();
                 model.setRandomNodes();
                 model.setCurrentAdjacent();
-                view.setGraphGamePanel(model.getLevel(), model.getAdjacencyList(), model.getCurrentAdjacent(), model.getMaxAdjacents());
                 model.setPar();
                 model.setVisited(model.getCurrentNode());
+
+                view.openLevelPanel();
+                view.createVisualGraph(model.getAdjacencyList());
+                view.choicePanelButtonSetup(model.getMaxAdjacents(), model.getCurrentAdjacent());
+                view.updateNodes(model.getCurrentNode(), model.getDestNode(), model.getCurrentAdjacent(), model.getVisited());
+                view.updateLabels(model.getCurrentNode(), model.getDestNode(), model.getScore(), model.getTotalScore(), model.getPar(), model.getHole());
                 view.addChoiceButtonActionListeners(new selectNode());
-                view.updateNodes(model.getCurrentNode(), model.getCurrentAdjacent(), model.getVisited());
                 System.out.println("Par - " + model.getPar());
             }
         }
@@ -43,7 +46,6 @@ public class Controller {
             model.setCurrentNode(chosenNode);
             model.setVisited(chosenNode);
             model.setCurrentAdjacent();
-            view.updateNodes(model.getCurrentNode(), model.getCurrentAdjacent(), model.getVisited());
 
             if(chosenNode == model.getDestNode() && model.getHole() <= 3){
                 model.setTotalScore();
@@ -53,7 +55,8 @@ public class Controller {
                 model.setHole();
                 model.clearVisited();
                 view.resetNodes();
-                view.updateNodes(model.getCurrentNode(), model.getCurrentAdjacent(), model.getVisited());
+                view.updateLabels(model.getCurrentNode(), model.getDestNode(), model.getScore(), model.getTotalScore(), model.getPar(), model.getHole());
+                view.updateNodes(model.getCurrentNode(), model.getDestNode(), model.getCurrentAdjacent(), model.getVisited());
                 System.out.println("NEW GAME ----------------------------");
                 System.out.println("Total Score -" + model.getTotalScore());
                 System.out.println("Start Node -" + model.getCurrentNode());
@@ -68,9 +71,9 @@ public class Controller {
                 System.out.println("Total Score -" + model.getTotalScore());
             } else{
                 view.UpdateButtons(model.getMaxAdjacents(),model.getCurrentAdjacent());
-                System.out.println("chosen node - " + model.getCurrentNode());
-                System.out.println("Weight - " + model.getWeight());
-                System.out.println("Score - " + model.getScore());
+                view.updateNodes(model.getCurrentNode(), model.getDestNode(), model.getCurrentAdjacent(), model.getVisited());
+                view.updateLabels(model.getCurrentNode(), model.getDestNode(), model.getScore(), model.getTotalScore(), model.getPar(), model.getHole());
+
             }
 
         }

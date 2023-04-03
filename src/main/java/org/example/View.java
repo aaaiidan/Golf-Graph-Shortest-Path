@@ -2,8 +2,11 @@ package org.example;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.ui.spriteManager.Sprite;
+import org.graphstream.ui.spriteManager.SpriteManager;
 import org.graphstream.ui.swing_viewer.SwingViewer;
 import org.graphstream.ui.swing_viewer.ViewPanel;
+import org.graphstream.algorithm.Toolkit.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -12,32 +15,72 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 public class View {
+    private Graph graph;
+    private SwingViewer viewer;
+    private ViewPanel view;
+    private SpriteManager spriteManager;
+    private Sprite flag;
     private JFrame frame;
-    private JFrame frame2;
     private JPanel startPanel;
     private JPanel graphPanelDisplay;
     private JPanel choicePanel;
     private JPanel infoPanel;
+    private JPanel winnerPanel;
     private JLabel title;
+    private JLabel currNodeLabel;
+    private JLabel destNodeLabel;
+    private JLabel scoreLabel;
+    private JLabel totalScoreLabel;
+    private JLabel parLabel;
+    private JLabel holeLabel;
     private JButton[] levelButton;
     private JButton[] choiceButton;
     private Border border;
-    private Graph graph;
+    private Font infoFont;
+    private Color infoColour;
 
     public View(){
+        //setting up visual graph
+        graph = new SingleGraph("Graph");
+        graph.setAttribute("ui.stylesheet", stylesheet);
+        spriteManager = new SpriteManager(graph);
+        flag = spriteManager.addSprite("flag");
+        viewer = new SwingViewer(graph, SwingViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+        viewer.enableAutoLayout();
+        view = (ViewPanel) viewer.addDefaultView(false);
+        view.setVisible(false);
+        view.setBounds(5, 5, 1175, 600);
+        view.setBorder(border);
+        view.setLayout(null);
 
+        //JFrame
         frame = new JFrame("Golf Graph");
+
+        //All JPanels
         startPanel = new JPanel();
         graphPanelDisplay = new JPanel();
         choicePanel = new JPanel();
         infoPanel = new JPanel();
-        title = new JLabel("Golf Graph!", SwingConstants.CENTER);
-        levelButton = new JButton[3];
-        border = BorderFactory.createLineBorder(Color.black);
-        graph = new SingleGraph("Graph");
-        graph.setAttribute("ui.stylesheet", stylesheet);
 
+        //All JLabels
+        title = new JLabel("Golf Graph!");
+        currNodeLabel = new JLabel();
+        destNodeLabel = new JLabel();
+        scoreLabel = new JLabel("Score: 0");
+        totalScoreLabel = new JLabel("Total Score: 0");
+        parLabel = new JLabel();
+        holeLabel = new JLabel("HOLE 1");
+
+        levelButton = new JButton[3];
+
+        border = BorderFactory.createLineBorder(Color.black);
+        infoFont = new Font("Futura", Font.PLAIN , 25);
+        infoColour = Color.white;
+
+
+        //setting up frame
         frame.setLayout(null);
         frame.setSize(1200, 800);
         frame.setResizable(false);
@@ -48,31 +91,70 @@ public class View {
         frame.add(graphPanelDisplay);
         frame.add(infoPanel);
         frame.add(choicePanel);
+        frame.add(view);
+
+        //setting up startPanel
+        startPanel.setVisible(true);
+        startPanel.add(title);
+        startPanel.setLayout(null);
+        startPanel.setBounds(0, 0, 1200, 800);
 
         for (int i = 0; i < levelButton.length; i++){
             levelButton[i] = new JButton();
             levelButton[i].setText("Level - " + (i + 1));
             levelButton[i].setName(Integer.toString(i+1));
         }
-
-        startPanel.setVisible(true);
-        startPanel.add(title);
-        startPanel.setLayout(null);
-        startPanel.setBounds(0, 0, 1200, 800);
-
         int yAxis = 250;
-        for (int i = 0; i < levelButton.length; i++){
-            startPanel.add(levelButton[i]);
-            levelButton[i].setBounds(475, yAxis, 250, 100);
+        for (JButton jButton : levelButton) {
+            startPanel.add(jButton);
+            jButton.setBounds(475, yAxis, 250, 100);
             yAxis += 150;
         }
-
         title.setBounds(550, 0, 100, 100);
+
+        //setting up choicePanel
+        choicePanel.setLayout(new GridLayout(2, 2, 5, 5));
+        choicePanel.setVisible(false);
+        choicePanel.setBounds(0, 610, 600, 160);
+        choicePanel.setBackground(new Color(32,90, 77));
+
+        //setting up infoPanel
+        infoPanel.setVisible(false);
+        infoPanel.setBounds(600, 610, 600, 190);
+        infoPanel.setBackground(new Color(32,90, 77));
+        infoPanel.setLayout(null);
+        infoPanel.add(currNodeLabel);
+        infoPanel.add(destNodeLabel);
+        infoPanel.add(scoreLabel);
+        infoPanel.add(totalScoreLabel);
+        infoPanel.add(parLabel);
+        infoPanel.add(holeLabel);
+
+        currNodeLabel.setBounds(25,30,250,40);
+        destNodeLabel.setBounds(25,60,250,40);
+        parLabel.setBounds(475,30,250,40);
+        scoreLabel.setBounds(450,60,250,40);
+        totalScoreLabel.setBounds(390,90,250,40);
+        holeLabel.setBounds(250, 0, 250, 30);
+
+        currNodeLabel.setFont(infoFont);
+        destNodeLabel.setFont(infoFont);
+        scoreLabel.setFont(infoFont);
+        totalScoreLabel.setFont(infoFont);
+        parLabel.setFont(infoFont);
+        holeLabel.setFont(infoFont);
+
+        currNodeLabel.setForeground(infoColour);
+        destNodeLabel.setForeground(infoColour);
+        scoreLabel.setForeground(infoColour);
+        totalScoreLabel.setForeground(infoColour);
+        parLabel.setForeground(infoColour);
+        holeLabel.setForeground(infoColour);
+
     }
 
-    public void setGraphGamePanel(int level, HashMap adjacencyList, int[] currentAdjacents, int maxAdj) {
+    public void createVisualGraph(HashMap adjacencyList) {
         ArrayList<Node> node;
-
 
         for (Object key : adjacencyList.keySet()){
             graph.addNode(key.toString());
@@ -91,26 +173,8 @@ public class View {
                 }
             }
         }
-
-        SwingViewer viewer = new SwingViewer(graph, SwingViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-        viewer.enableAutoLayout();
-        ViewPanel view = (ViewPanel) viewer.addDefaultView(false);
-
-
-        frame.add(view);
-        view.setVisible(true);
-        view.setBounds(5, 5, 1175, 600);
-        view.setBorder(border);
-        setChoicePanel(maxAdj, currentAdjacents);
-        setInfoPanel();
-
     }
-    public void setChoicePanel(int maxAdj,  int[] currentAdjacent) {
-        choicePanel.setLayout(new GridLayout(2, 2, 5, 5));
-        choicePanel.setVisible(true);
-        choicePanel.setBounds(0, 610, 600, 160);
-        choicePanel.setBackground(Color.red);
-
+    public void choicePanelButtonSetup(int maxAdj,  int[] currentAdjacent) {
         choiceButton = new JButton[maxAdj];
 
         for (int i = 0; i < maxAdj; i++){
@@ -119,7 +183,6 @@ public class View {
             choiceButton[i].setBorder(null);
             choicePanel.add(choiceButton[i]);
         }
-
         for (int i = 0; i < maxAdj; i++){
             if(i < currentAdjacent.length){
                 choiceButton[i].setText(String.valueOf(currentAdjacent[i]));
@@ -129,19 +192,14 @@ public class View {
                 choiceButton[i].setEnabled(false);
             }
         }
-
     }
 
-    public void setInfoPanel(){
-        infoPanel.setVisible(true);
-        infoPanel.setBounds(600, 610, 600, 190);
-        infoPanel.setBackground(Color.green);
-
-    }
-
-    public void removeStartPanel(){
+    public void openLevelPanel(){
         startPanel.setVisible(false);
         frame.remove(startPanel);
+        view.setVisible(true);
+        choicePanel.setVisible(true);
+        infoPanel.setVisible(true);
     }
 
     public void addLevelButtonActionListeners(ActionListener selectLevel){
@@ -169,7 +227,9 @@ public class View {
         }
     }
 
-    public void updateNodes(int curNode, int[] adjacentNodes, ArrayList<Integer> visited){
+    public void updateNodes(int curNode, int dest, int[] adjacentNodes, ArrayList<Integer> visited){
+      //  org.graphstream.graph.Node destNode = graph.getNode(Integer.toString(dest));
+        //double p[] = Toolkit.
 
         //reset all nodes that are not adjacent to red
         for(org.graphstream.graph.Node node : graph) {
@@ -202,6 +262,11 @@ public class View {
         graph.getNode(Integer.toString(curNode)).removeAttribute("ui.class");
         graph.getNode(Integer.toString(curNode)).setAttribute("ui.class", "current");
 
+        graph.getNode(Integer.toString(dest)).setAttribute("ui.class", "goal");
+
+
+       // flag.setPosition(p[0], p[1], p[2]);
+
     }
 
     public void resetNodes(){
@@ -213,6 +278,16 @@ public class View {
         });
     }
 
+    public void updateLabels(int currNode, int destNode, int score, int totalScore, int par, int hole){
+        currNodeLabel.setText("Golf ball Node: " + currNode);
+        destNodeLabel.setText("Hole Node: " + destNode);
+        scoreLabel.setText("Score: " + score);
+        totalScoreLabel.setText("Total Score: " + totalScore);
+        parLabel.setText("Par: " + par);
+        holeLabel.setText("Hole: " + hole);
+
+    }
+
     private String stylesheet = ""
             //+ "edge {size: 3px; text-size: 25px; text-color: black; edge-color} "
             + "edge { size: 4px; text-size: 25px; text-color: #3f301d; text-style: bold; fill-color: #a8ba9a; }"
@@ -221,6 +296,8 @@ public class View {
             + "node.current { text-color: black; fill-color: white;} " // shadow-mode: plain; shadow-width: 3px; shadow-color: #FC0; shadow-offset: 0px;
             + "node.available { fill-color: blue;}"
             + "node.visited { fill-color: #FC0; }"
-            + "graph { fill-mode: image-tiled; fill-image: url('src/main/resources/background3.png'); }";
+            + "node.goal {fill-color: green; }"
+            + "graph { fill-mode: image-tiled; fill-image: url('src/main/resources/background3.png'); }"
+            + "sprite { shape: box; size: 32px, 52px; fill-mode: image-scaled; fill-image: url('src/main/resources/flag.png'); }";
 
 }

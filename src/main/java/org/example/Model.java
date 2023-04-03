@@ -110,6 +110,7 @@ public class Model {
         this.score += currentWeight;
     }
 
+
     public int getScore(){
         return this.score;
     }
