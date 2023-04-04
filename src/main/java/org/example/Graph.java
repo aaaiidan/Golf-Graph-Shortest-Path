@@ -6,7 +6,7 @@ import java.util.*;
 
 public class Graph {
     private HashMap<Integer, ArrayList<Node>> adjacencyList;
-    private int level;
+    public int level;
 
     public Graph(String fileName, int level){
         this.adjacencyList = new HashMap<>();
@@ -14,7 +14,7 @@ public class Graph {
         readGraphFile(fileName, level);
     }
 
-    private void readGraphFile(String fileName, int level) {
+    public void readGraphFile(String fileName, int level) {
         try {
             File graphFile = new File(fileName);
             Scanner scanner = new Scanner(graphFile);
@@ -80,6 +80,7 @@ public class Graph {
         for (int i = 0; i < adjacents.length; i++) {
             adjacents[i] =  adjacencyList.get(node).get(i).getValue();
         }
+        System.out.println(Arrays.toString(adjacents));
         return adjacents;
     }
 

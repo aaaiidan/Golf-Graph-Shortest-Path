@@ -330,6 +330,7 @@ public class View {
         choicePanel.setVisible(false);
         infoPanel.setVisible(false);
     }
+
     public void displayWinner(int totalScore){
         winnerPanel.setVisible(true);
         totalScoreWinnerLabel.setText("Total Score: " + totalScore);
