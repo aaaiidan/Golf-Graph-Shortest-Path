@@ -1,7 +1,10 @@
 package org.example;
 
+import org.graphstream.algorithm.Toolkit;
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.stream.ProxyPipe;
 import org.graphstream.ui.spriteManager.Sprite;
 import org.graphstream.ui.spriteManager.SpriteManager;
 import org.graphstream.ui.swing_viewer.SwingViewer;
@@ -19,6 +22,7 @@ import java.util.HashMap;
 public class View {
     private Graph graph;
     private SwingViewer viewer;
+    private ProxyPipe pipe;
     private ViewPanel view;
     private SpriteManager spriteManager;
     private Sprite flag;
@@ -187,6 +191,9 @@ public class View {
         view.setBorder(border);
         view.setLayout(null);
 
+        pipe = viewer.newViewerPipe();
+        pipe.addAttributeSink(graph);
+
         frame.add(view);
 
         for (Object key : adjacencyList.keySet()){
@@ -247,22 +254,32 @@ public class View {
         }
     }
 
-    public void updateNodes(int curNode, int dest, int[] adjacentNodes, ArrayList<Integer> visited){
-      //  org.graphstream.graph.Node destNode = graph.getNode(Integer.toString(dest));
-        //double p[] = Toolkit.
+    public void updateNodes(int curNode, int dest, int[] adjacentNodes, ArrayList<Integer> visited) {
+        pipe.pump();
+
+        org.graphstream.graph.Node destNode = graph.getNode(Integer.toString(dest));
+        double p[] = Toolkit.nodePosition(destNode);
 
         //reset all nodes that are not adjacent to red
         for(org.graphstream.graph.Node node : graph) {
-            for (int adjacent : adjacentNodes){
-                if (Integer.parseInt(node.getId()) != adjacent){
-                    node.removeAttribute("ui.class");
-                }
-            }
+            node.removeAttribute("ui.class");
         }
 
-        //change all adjacent nodes to blue
-        for(int node : adjacentNodes){
-            graph.getNode(Integer.toString(node)).setAttribute("ui.class", "available");
+        graph.edges().forEach(edge -> {
+            if (!visited.contains(Integer.parseInt(edge.getNode0().toString())) ||  !visited.contains(Integer.parseInt(edge.getNode1().toString()))){
+                edge.removeAttribute("ui.class");
+            }
+        });
+
+
+    //change all adjacent nodes to blue
+        for(int i = 0; i < adjacentNodes.length; i++) {
+            graph.getNode(Integer.toString(adjacentNodes[i])).setAttribute("ui.class", "available");
+            if (graph.getEdge(curNode + "-" + adjacentNodes[i]) != null) {
+                graph.getEdge(curNode + "-" + adjacentNodes[i]).setAttribute("ui.class", "available");
+            } else {
+                graph.getEdge(adjacentNodes[i] + "-" + curNode).setAttribute("ui.class", "available");
+            }
         }
 
         //change all visited nodes to gold
@@ -285,7 +302,7 @@ public class View {
         graph.getNode(Integer.toString(dest)).setAttribute("ui.class", "goal");
 
 
-       // flag.setPosition(p[0], p[1], p[2]);
+        flag.setPosition(p[0], p[1], p[2]);
 
     }
 
@@ -321,6 +338,11 @@ public class View {
     public void returnHome(){
         winnerPanel.setVisible(false);
         startPanel.setVisible(true);
+
+        for (JButton button : choiceButton) {
+            choicePanel.remove(button);
+        }
+
     }
 
     public void addLevelButtonActionListeners(ActionListener selectLevel){
@@ -342,11 +364,12 @@ public class View {
     private String stylesheet = ""
             + "edge { size: 4px; text-size: 25px; text-color: #3f301d; text-style: bold; fill-color: #a8ba9a; }"
             + "edge.visited { fill-color: #FC0; fill-mode: plain; shadow-mode: plain; shadow-width: 3px; shadow-color: #4c3d00; shadow-offset: 0px; }"
+            + "edge.available { fill-color: blue; }"
             + "node { size: 25px; text-color: white; text-size: 20px; text-alignment: center; fill-color: red; fill-mode: plain; stroke-mode: plain; stroke-color: black; }" //Unavailable Node
             + "node.current { text-color: black; fill-color: white;} " // shadow-mode: plain; shadow-width: 3px; shadow-color: #FC0; shadow-offset: 0px;
             + "node.available { fill-color: blue;}"
             + "node.visited { fill-color: #FC0; }"
-            + "node.goal {fill-color: green; }"
+            + "node.goal { size: 40px; fill-mode: image-scaled; fill-image: url('src/main/resources/flag.png');}"
             + "graph { fill-mode: image-tiled; fill-image: url('src/main/resources/background3.png'); }"
             + "sprite { shape: box; size: 32px, 52px; fill-mode: image-scaled; fill-image: url('src/main/resources/flag.png'); }";
 

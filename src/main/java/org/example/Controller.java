@@ -63,8 +63,6 @@ public class Controller {
                 view.updateNodes(model.getCurrentNode(), model.getDestNode(), model.getCurrentAdjacent(), model.getVisited());
             }
             if (model.getHole() > 1) {
-                model.setTotalScore();
-
                 view.leaveLevelPanel();
                 view.displayWinner(model.getTotalScore());
             } else{
