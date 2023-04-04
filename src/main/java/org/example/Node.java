@@ -1,6 +1,6 @@
 package org.example;
 
-public class Node  {
+public class Node implements NodeInterface  {
     private int value;
     private int weight;
 

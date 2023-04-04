@@ -11,9 +11,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class View {
+public class View implements ViewInterface {
     private Graph graph;
-    private SwingViewer viewer;
     private ViewPanel view;
     private JFrame frame;
     private JPanel startPanel;
@@ -195,7 +194,7 @@ public class View {
         //setting up visual graph
         graph = new SingleGraph("Graph");
         graph.setAttribute("ui.stylesheet", stylesheet);
-        viewer = new SwingViewer(graph, SwingViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+        SwingViewer viewer = new SwingViewer(graph, SwingViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
         viewer.enableAutoLayout();
         view = (ViewPanel) viewer.addDefaultView(false);
         view.setVisible(true);
@@ -373,7 +372,7 @@ public class View {
     }
 
     private String instructions = "The player starts at the white golf ball and by selecting available nodes with the buttons provided, "
-            + "the player must reach the end node (hole/flag) with the shortest possible distance.\n \n"
+            + "the player must reach the end node (hole/flag) with the shortest possible distance. \n \n"
             + "The lower the the players score is, the better. A perfect game would result in a total score of 0. Unavailable nodes will "
             + "appear as red whereas available nodes will appear blue."
             + "Score better by selecting the path with smallest total weight. \n \n"

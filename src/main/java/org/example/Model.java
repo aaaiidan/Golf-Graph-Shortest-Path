@@ -30,8 +30,8 @@ public class Model {
 
     public void createGraph(){
         this.graph = new Graph(fileName, level);
-        maxAdjacent = graph.largestAdjacents();
-        adjacencyList = graph.getAdjacecnyList();
+        maxAdjacent = graph.largestAdjacent();
+        adjacencyList = graph.getAdjacencyList();
         this.score = 0;
         this.hole = 1;
         this.totalScore = 0;
