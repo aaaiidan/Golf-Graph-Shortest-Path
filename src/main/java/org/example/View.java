@@ -1,16 +1,9 @@
 package org.example;
 
-import org.graphstream.algorithm.Toolkit;
-import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;
-import org.graphstream.stream.ProxyPipe;
-import org.graphstream.ui.spriteManager.Sprite;
-import org.graphstream.ui.spriteManager.SpriteManager;
 import org.graphstream.ui.swing_viewer.SwingViewer;
 import org.graphstream.ui.swing_viewer.ViewPanel;
-import org.graphstream.algorithm.Toolkit.*;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -18,14 +11,10 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
 public class View {
     private Graph graph;
     private SwingViewer viewer;
-    private ProxyPipe pipe;
     private ViewPanel view;
-    private SpriteManager spriteManager;
-    private Sprite flag;
     private JFrame frame;
     private JPanel startPanel;
     private JPanel graphPanelDisplay;
@@ -41,9 +30,12 @@ public class View {
     private JLabel holeLabel;
     private JLabel winnerLabel;
     private JLabel totalScoreWinnerLabel;
+    private JTextArea instructionsText;
     private JButton[] levelButton;
     private JButton[] choiceButton;
     private JButton homeButton;
+    private JButton homeButton2;
+    private JButton instructionsButton;
     private Border border;
     private Font infoFont;
     private Color infoColour;
@@ -70,9 +62,14 @@ public class View {
         winnerLabel = new JLabel("WINNER!!!");
         totalScoreWinnerLabel = new JLabel();
 
+        //TextArea
+        instructionsText = new JTextArea(instructions);
+
         //buttons
         levelButton = new JButton[3];
         homeButton = new JButton("Home");
+        instructionsButton = new JButton("Instructions");
+        homeButton2 = new JButton("Home");
 
         //font and borders
         border = BorderFactory.createLineBorder(Color.black);
@@ -90,12 +87,14 @@ public class View {
         frame.add(graphPanelDisplay);
         frame.add(infoPanel);
         frame.add(choicePanel);
-       // frame.add(view);
         frame.add(winnerPanel);
 
         //setting up startPanel
         startPanel.setVisible(true);
         startPanel.add(title);
+        startPanel.add(instructionsButton);
+        startPanel.add(instructionsText);
+        startPanel.add(homeButton2);
         startPanel.setLayout(null);
         startPanel.setBackground(new Color(135,206, 235));
         startPanel.setBounds(0, 0, 1200, 800);
@@ -105,13 +104,28 @@ public class View {
             levelButton[i].setText("Level - " + (i + 1));
             levelButton[i].setName(Integer.toString(i+1));
         }
-        int yAxis = 250;
+        int yAxis = 150;
         for (JButton levelButton : levelButton) {
             startPanel.add(levelButton);
             levelButton.setBounds(475, yAxis, 250, 100);
             levelButton.setFont(new Font("Futura", Font.BOLD , 50));
             yAxis += 150;
         }
+        homeButton2.setBounds(350, yAxis, 500, 100);
+        homeButton2.setFont(new Font("Futura", Font.BOLD , 50));
+        homeButton2.setVisible(false);
+
+        instructionsButton.setBounds(350, yAxis, 500, 100);
+        instructionsButton.setFont(new Font("Futura", Font.BOLD , 50));
+
+        instructionsText.setVisible(false);
+        instructionsText.setLineWrap(true);
+        instructionsText.setWrapStyleWord(true);
+        instructionsText.setEditable(false);
+        instructionsText.setBounds(100, 125, 1000, 425);
+        instructionsText.setFont(new Font("Futura", Font.BOLD , 30));
+        instructionsText.setBackground(new Color(135,206, 235));
+
         title.setBounds(460, 0, 500, 100);
         title.setFont(new Font("Futura", Font.BOLD , 50));
 
@@ -181,8 +195,6 @@ public class View {
         //setting up visual graph
         graph = new SingleGraph("Graph");
         graph.setAttribute("ui.stylesheet", stylesheet);
-        spriteManager = new SpriteManager(graph);
-        flag = spriteManager.addSprite("flag");
         viewer = new SwingViewer(graph, SwingViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
         viewer.enableAutoLayout();
         view = (ViewPanel) viewer.addDefaultView(false);
@@ -190,9 +202,6 @@ public class View {
         view.setBounds(5, 5, 1175, 600);
         view.setBorder(border);
         view.setLayout(null);
-
-        pipe = viewer.newViewerPipe();
-        pipe.addAttributeSink(graph);
 
         frame.add(view);
 
@@ -214,7 +223,7 @@ public class View {
             }
         }
     }
-    public void choicePanelButtonSetup(int maxAdj,  int[] currentAdjacent) {
+    public void choicePanelButtonSetup(int maxAdj,  int[] currentAdjacent, int[] currentAdjacentWeights) {
         choiceButton = new JButton[maxAdj];
 
         for (int i = 0; i < maxAdj; i++){
@@ -225,7 +234,7 @@ public class View {
         }
         for (int i = 0; i < maxAdj; i++){
             if(i < currentAdjacent.length){
-                choiceButton[i].setText(String.valueOf(currentAdjacent[i]));
+                choiceButton[i].setText(currentAdjacent[i] + " - (" + currentAdjacentWeights[i] + ")");
                 choiceButton[i].setName(String.valueOf(currentAdjacent[i]));
             } else {
                 choiceButton[i].setText("X");
@@ -241,10 +250,10 @@ public class View {
         infoPanel.setVisible(true);
     }
 
-    public void UpdateButtons(int maxAdj, int[] currentAdjacent) {
+    public void UpdateButtons(int maxAdj, int[] currentAdjacent, int[] currentAdjacentWeights) {
         for (int i = 0; i < maxAdj; i++){
             if(i < currentAdjacent.length){
-                choiceButton[i].setText(String.valueOf(currentAdjacent[i]));
+                choiceButton[i].setText(currentAdjacent[i] + " - (" + currentAdjacentWeights[i] + ")");
                 choiceButton[i].setName(String.valueOf(currentAdjacent[i]));
                 choiceButton[i].setEnabled(true);
             } else {
@@ -255,10 +264,6 @@ public class View {
     }
 
     public void updateNodes(int curNode, int dest, int[] adjacentNodes, ArrayList<Integer> visited) {
-        pipe.pump();
-
-        org.graphstream.graph.Node destNode = graph.getNode(Integer.toString(dest));
-        double p[] = Toolkit.nodePosition(destNode);
 
         //reset all nodes that are not adjacent to red
         for(org.graphstream.graph.Node node : graph) {
@@ -301,18 +306,6 @@ public class View {
 
         graph.getNode(Integer.toString(dest)).setAttribute("ui.class", "goal");
 
-
-        flag.setPosition(p[0], p[1], p[2]);
-
-    }
-
-    public void resetNodes(){
-        for(org.graphstream.graph.Node node : graph) {
-            node.removeAttribute("ui.class");
-        }
-        graph.edges().forEach(edge -> {
-            edge.removeAttribute("ui.class");
-        });
     }
 
     public void updateLabels(int currNode, int destNode, int score, int totalScore, int par, int hole){
@@ -332,23 +325,45 @@ public class View {
     }
     public void displayWinner(int totalScore){
         winnerPanel.setVisible(true);
+        homeButton.setVisible(true);
         totalScoreWinnerLabel.setText("Total Score: " + totalScore);
     }
 
     public void returnHome(){
         winnerPanel.setVisible(false);
+        homeButton.setVisible(false);
+        homeButton2.setVisible(false);
+        instructionsText.setVisible(false);
+        instructionsButton.setVisible(true);
         startPanel.setVisible(true);
 
-        for (JButton button : choiceButton) {
-            choicePanel.remove(button);
+        if (choiceButton != null){
+            for (JButton button : choiceButton) {
+                choicePanel.remove(button);
+            }
         }
 
+        for(JButton level : levelButton){
+            level.setVisible(true);
+        }
     }
 
-    public void addLevelButtonActionListeners(ActionListener selectLevel){
+    public void displayInstructions(){
+        for(JButton level : levelButton){
+            level.setVisible(false);
+        }
+        instructionsButton.setVisible(false);
+        instructionsText.setVisible(true);
+        homeButton2.setVisible(true);
+    }
+
+    public void addLevelButtonHomeButtonAndInstructionButtonActionListeners(ActionListener selectLevel, ActionListener home, ActionListener instructions){
         for(JButton level: levelButton) {
             level.addActionListener(selectLevel);
         }
+        homeButton.addActionListener(home);
+        homeButton2.addActionListener(home);
+        instructionsButton.addActionListener(instructions);
     }
 
     public void addChoiceButtonActionListeners(ActionListener selectNode){
@@ -356,11 +371,13 @@ public class View {
             button.addActionListener(selectNode);
         }
     }
-    public void addHomeButtonListeners(ActionListener home){
-        homeButton.addActionListener(home);
 
-    }
-
+    private String instructions = "The player starts at the white golf ball and by selecting available nodes with the buttons provided, "
+            + "the player must reach the end node (hole/flag) with the shortest possible distance.\n \n"
+            + "The lower the the players score is, the better. A perfect game would result in a total score of 0. Unavailable nodes will "
+            + "appear as red whereas available nodes will appear blue."
+            + "Score better by selecting the path with smallest total weight. \n \n"
+            + "There are 3 levels, with each level being more complex than the previous.";
     private String stylesheet = ""
             + "edge { size: 4px; text-size: 25px; text-color: #3f301d; text-style: bold; fill-color: #a8ba9a; }"
             + "edge.visited { fill-color: #FC0; fill-mode: plain; shadow-mode: plain; shadow-width: 3px; shadow-color: #4c3d00; shadow-offset: 0px; }"
@@ -369,8 +386,7 @@ public class View {
             + "node.current { text-color: black; fill-color: white;} " // shadow-mode: plain; shadow-width: 3px; shadow-color: #FC0; shadow-offset: 0px;
             + "node.available { fill-color: blue;}"
             + "node.visited { fill-color: #FC0; }"
-            + "node.goal { size: 40px; fill-mode: image-scaled; fill-image: url('src/main/resources/flag.png');}"
-            + "graph { fill-mode: image-tiled; fill-image: url('src/main/resources/background3.png'); }"
-            + "sprite { shape: box; size: 32px, 52px; fill-mode: image-scaled; fill-image: url('src/main/resources/flag.png'); }";
+            + "node.goal { size: 40px; text-color: black; text-style: bold; text-size: 33px; fill-mode: image-scaled; fill-image: url('src/main/resources/flag.png');}"
+            + "graph { fill-mode: image-tiled; fill-image: url('src/main/resources/background3.png'); }";
 
 }

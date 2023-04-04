@@ -60,10 +60,6 @@ public class Graph {
         return new ArrayList<>(adjacencyList.keySet());
     }
 
-    public ArrayList<Node> getEdges(int src){
-        return adjacencyList.get(src);
-    }
-
     public int shortestPath(int start, int end){
         int max = 0;
         for (int i = 0; i < adjacencyList.keySet().size(); i++){
@@ -74,13 +70,20 @@ public class Graph {
         return algo.getDistance(end);
     }
 
-    public int[] getAdjacents(int node) {
-
-        int[] adjacents = new int[adjacencyList.get(node).size()];
-        for (int i = 0; i < adjacents.length; i++) {
-            adjacents[i] =  adjacencyList.get(node).get(i).getValue();
+    public int[] getAdjacent(int node) {
+        int[] adjacent = new int[adjacencyList.get(node).size()];
+        for (int i = 0; i < adjacent.length; i++) {
+            adjacent[i] =  adjacencyList.get(node).get(i).getValue();
         }
-        return adjacents;
+        return adjacent;
+    }
+
+    public int[] getAdjacentWeights(int node){
+        int[] adjacentWeights = new int[adjacencyList.get(node).size()];
+        for (int i = 0; i < adjacentWeights.length; i++) {
+            adjacentWeights[i] =  adjacencyList.get(node).get(i).getWeight();
+        }
+        return adjacentWeights;
     }
 
     public int largestAdjacents(){

@@ -4,10 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f7b48633-5c88-4bcb-b087-22dac57322dc" name="Changes" comment="Working game (near final version)">
+    <list default="true" id="f7b48633-5c88-4bcb-b087-22dac57322dc" name="Changes" comment="Fixed a few bugs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/DijkstrasAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/DijkstrasAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Graph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Graph.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Model.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Node.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Node.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/View.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/flag.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/flag.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,7 +106,7 @@
       <workItem from="1679937448675" duration="10045000" />
       <workItem from="1680006473961" duration="10140000" />
       <workItem from="1680017119328" duration="22854000" />
-      <workItem from="1680455839579" duration="18778000" />
+      <workItem from="1680455839579" duration="27093000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1679495506792</created>
@@ -157,7 +164,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680543238481</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Fixed a few bugs">
+      <created>1680614727550</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1680614727550</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -183,7 +197,8 @@
     <MESSAGE value="edges and nodes reset/update correctly (gui)" />
     <MESSAGE value="Refactored code" />
     <MESSAGE value="Working game (near final version)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Working game (near final version)" />
+    <MESSAGE value="Fixed a few bugs" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed a few bugs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
