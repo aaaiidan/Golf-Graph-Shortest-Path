@@ -61,6 +61,7 @@ public class Controller {
                 model.setVisited(model.getCurrentNode());
             }
             if (model.getHole() > model.getNoOfHoles()) {
+                model.clearVisited();
                 view.leaveLevelPanel();
                 view.displayWinner(model.getTotalScore());
             } else{
