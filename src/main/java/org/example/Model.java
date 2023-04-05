@@ -11,24 +11,27 @@ public class Model {
     private int hole;
     private int totalScore;
     private int level;
+    private final int noOfHoles;
     private int maxAdjacent;
-    private String fileName;
+    private final String fileName;
     private HashMap adjacencyList;
     private int currentNode;
     private int destNode;
     private int currentWeight;
     private int[] currentAdjacent;
+    private int[] currentAdjacentWeights;
     private ArrayList<Integer> visited;
 
     public Model(String fileName){
         this.fileName = fileName;
         this.visited = new ArrayList<>();
+        this.noOfHoles = 9;
     }
 
     public void createGraph(){
         this.graph = new Graph(fileName, level);
-        maxAdjacent = graph.largestAdjacents();
-        adjacencyList = graph.getAdjacecnyList();
+        maxAdjacent = graph.largestAdjacent();
+        adjacencyList = graph.getAdjacencyList();
         this.score = 0;
         this.hole = 1;
         this.totalScore = 0;
@@ -96,11 +99,17 @@ public class Model {
     }
 
     public void setCurrentAdjacent(){
-        this.currentAdjacent = graph.getAdjacents(currentNode);
+        this.currentAdjacent = graph.getAdjacent(currentNode);
     }
 
     public int[] getCurrentAdjacent(){
         return currentAdjacent;
+    }
+    public void setCurrentAdjacentWeights(){
+        this.currentAdjacentWeights = graph.getAdjacentWeights(currentNode);
+    }
+    public int[] getCurrentAdjacentWeights(){
+        return currentAdjacentWeights;
     }
 
     public void setCurrentNode(int currentNode) {
@@ -145,4 +154,7 @@ public class Model {
         this.visited.clear();
     }
 
+    public int getNoOfHoles(){
+        return this.noOfHoles;
+    }
 }

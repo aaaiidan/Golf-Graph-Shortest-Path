@@ -1,7 +1,6 @@
 package org.example;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
@@ -18,17 +17,14 @@ public class DijkstrasAlgorithm {
         distance = new int[noOfN];
         settled = new ArrayList<>();
 
-        priorityQueue = new PriorityQueue<>(new Comparator<Node>() {
-            @Override
-            public int compare(Node n1, Node n2) {
-                if(n1.getWeight() < n2.getWeight()){
-                    return -1;
-                }
-                if (n1.getWeight() > n2.getWeight()){
-                    return 1;
-                }
-                return 0;
+        priorityQueue = new PriorityQueue<>((n1, n2) -> {
+            if(n1.getWeight() < n2.getWeight()){
+                return -1;
             }
+            if (n1.getWeight() > n2.getWeight()){
+                return 1;
+            }
+            return 0;
         });
 
     }

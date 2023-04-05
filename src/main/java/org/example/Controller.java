@@ -7,14 +7,12 @@ import java.awt.event.ActionListener;
 public class Controller {
     private Model model;
     private View view;
-    private View standardView;
 
     public Controller(Model model, View view) {
         this.model  = model;
         this.view = view;
-        this.standardView = view;
-        this.view.addLevelButtonActionListeners(new selectLevel());
-        this.view.addHomeButtonListeners(new home());
+        this.view.addLevelButtonHomeButtonAndInstructionButtonActionListeners(new selectLevel(), new home(), new instructions());
+
     }
 
     class selectLevel implements ActionListener{
@@ -26,12 +24,13 @@ public class Controller {
                 model.createGraph();
                 model.setRandomNodes();
                 model.setCurrentAdjacent();
+                model.setCurrentAdjacentWeights();
                 model.setPar();
                 model.setVisited(model.getCurrentNode());
 
                 view.openLevelPanel();
                 view.createVisualGraph(model.getAdjacencyList());
-                view.choicePanelButtonSetup(model.getMaxAdjacent(), model.getCurrentAdjacent());
+                view.choicePanelButtonSetup(model.getMaxAdjacent(), model.getCurrentAdjacent(), model.getCurrentAdjacentWeights());
                 view.updateNodes(model.getCurrentNode(), model.getDestNode(), model.getCurrentAdjacent(), model.getVisited());
                 view.updateLabels(model.getCurrentNode(), model.getDestNode(), model.getScore(), model.getTotalScore(), model.getPar(), model.getHole());
                 view.addChoiceButtonActionListeners(new selectNode());
@@ -49,24 +48,24 @@ public class Controller {
             model.setCurrentNode(chosenNode);
             model.setVisited(chosenNode);
             model.setCurrentAdjacent();
+            model.setCurrentAdjacentWeights();
 
-            if(chosenNode == model.getDestNode() && model.getHole() <= 3){
+            if(chosenNode == model.getDestNode() && model.getHole() <= model.getNoOfHoles()){
+                model.clearVisited();
                 model.setTotalScore();
                 model.setRandomNodes();
                 model.setCurrentAdjacent();
+                model.setCurrentAdjacentWeights();
                 model.setPar();
                 model.setHole();
-                model.clearVisited();
-
-                view.resetNodes();
-                view.updateLabels(model.getCurrentNode(), model.getDestNode(), model.getScore(), model.getTotalScore(), model.getPar(), model.getHole());
-                view.updateNodes(model.getCurrentNode(), model.getDestNode(), model.getCurrentAdjacent(), model.getVisited());
+                model.setVisited(model.getCurrentNode());
             }
-            if (model.getHole() > 1) {
+            if (model.getHole() > model.getNoOfHoles()) {
+                model.clearVisited();
                 view.leaveLevelPanel();
                 view.displayWinner(model.getTotalScore());
             } else{
-                view.UpdateButtons(model.getMaxAdjacent(),model.getCurrentAdjacent());
+                view.UpdateButtons(model.getMaxAdjacent(),model.getCurrentAdjacent(), model.getCurrentAdjacentWeights());
                 view.updateNodes(model.getCurrentNode(), model.getDestNode(), model.getCurrentAdjacent(), model.getVisited());
                 view.updateLabels(model.getCurrentNode(), model.getDestNode(), model.getScore(), model.getTotalScore(), model.getPar(), model.getHole());
 
@@ -79,6 +78,12 @@ public class Controller {
         @Override
         public void actionPerformed(ActionEvent e) {
             view.returnHome();
+        }
+    }
+    class instructions implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            view.displayInstructions();
         }
     }
 }
