@@ -322,6 +322,7 @@ public class View implements ViewInterface {
         choicePanel.setVisible(false);
         infoPanel.setVisible(false);
     }
+
     public void displayWinner(int totalScore){
         winnerPanel.setVisible(true);
         homeButton.setVisible(true);

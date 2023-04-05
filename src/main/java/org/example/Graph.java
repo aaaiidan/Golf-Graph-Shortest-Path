@@ -12,7 +12,7 @@ public class Graph implements GraphInterface {
         readGraphFile(fileName, level);
     }
 
-    private void readGraphFile(String fileName, int level) {
+    public void readGraphFile(String fileName, int level) {
         try {
             File graphFile = new File(fileName);
             Scanner scanner = new Scanner(graphFile);
