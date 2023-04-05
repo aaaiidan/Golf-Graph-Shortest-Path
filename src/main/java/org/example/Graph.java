@@ -4,13 +4,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-public class Graph {
-    private HashMap<Integer, ArrayList<Node>> adjacencyList;
-    private int level;
+public class Graph implements GraphInterface {
+    private final HashMap<Integer, ArrayList<Node>> adjacencyList;
 
     public Graph(String fileName, int level){
         this.adjacencyList = new HashMap<>();
-        this.level = level;
         readGraphFile(fileName, level);
     }
 
@@ -86,7 +84,7 @@ public class Graph {
         return adjacentWeights;
     }
 
-    public int largestAdjacents(){
+    public int largestAdjacent(){
         int max = 0;
         for (int i = 0; i < adjacencyList.size(); i++){
             if(adjacencyList.containsKey(i)){
@@ -98,7 +96,7 @@ public class Graph {
         return max;
     }
 
-    public HashMap getAdjacecnyList(){
+    public HashMap<Integer, ArrayList<Node>> getAdjacencyList(){
         return adjacencyList;
     }
 }
